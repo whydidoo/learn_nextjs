@@ -6,6 +6,11 @@ import { BullModule } from '@nestjs/bullmq';
 import { BooksModule } from './books/books.module';
 import { dataSourceOptions } from 'db/data-source';
 import { UsersModule } from './users/users.module';
+import {
+  ClientProxyFactory,
+  ClientsModule,
+  Transport,
+} from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -23,6 +28,16 @@ import { UsersModule } from './users/users.module';
         port: Number(process.env.REDIS_PORT),
       },
     }),
+    ClientsModule.register([
+      {
+        name: 'WORKER',
+        transport: Transport.REDIS,
+        options: {
+          host: process.env.REDIS_URL,
+          port: Number(process.env.REDIS_PORT),
+        },
+      },
+    ]),
     BooksModule,
     UsersModule,
   ],

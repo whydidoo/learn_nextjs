@@ -5,6 +5,7 @@ import { BooksController } from './books.controller';
 import { BooksService } from './books.service';
 import { BullModule } from '@nestjs/bullmq';
 import { BooksProcessor } from './books.processor';
+import { getWorker } from 'src/utils/microservices';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { BooksProcessor } from './books.processor';
       name: 'books',
     }),
   ],
-  providers: [BooksService, BooksProcessor],
+  providers: [BooksService, BooksProcessor, getWorker()],
   controllers: [BooksController],
 })
 export class BooksModule {}
