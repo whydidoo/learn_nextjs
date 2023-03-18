@@ -37,15 +37,13 @@ export class BooksController {
   })
   @Post()
   async createBook(@Body() bookDTO: CreateBookDto) {
-    const response = await firstValueFrom(
-      this.workerClient.send('create_book', 'started creating book'),
+    const status = await firstValueFrom<boolean>(
+      this.workerClient.send('create_book', bookDTO),
     );
 
     // it is for testing of response from worker
-    if (response !== 'ok') {
+    if (!status) {
       throw new InternalServerErrorException();
     }
-
-    return this.booksService.createBook(bookDTO);
   }
 }
