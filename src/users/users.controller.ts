@@ -35,12 +35,14 @@ export class UsersController {
     return this.usersService.getJwt(req.user);
   }
 
-  @Post('sign-up')
   @ApiResponse({
     status: HttpStatus.CREATED,
     type: User,
   })
+  @AllowUnauthorizedRequest()
+  @Post('sign-up')
   async singUp(@Body() userDto: UserDto) {
+    console.log(userDto);
     const user = await this.usersService.findByEmail(userDto.email);
 
     if (user) {
