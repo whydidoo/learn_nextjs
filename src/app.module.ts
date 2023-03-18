@@ -1,30 +1,30 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
+import { BullModule } from '@nestjs/bullmq';
 
 import { BooksModule } from './books/books.module';
+import { dataSourceOptions } from 'db/data-source';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      url: process.env.DATABASE_URL,
-      entities: [join(__dirname, '**/**.entity{.ts,.js}')],
-      synchronize: true,
-      useNewUrlParser: true,
-      logging: true,
-      useUnifiedTopology: true,
-      ssl: false,
-      username: 'booksuser',
-      password: 'bookspassword',
-      database: 'books',
+    TypeOrmModule.forRootAsync({
+      useFactory: async () => {
+        return { ...dataSourceOptions, autoLoadEntities: true };
+      },
     }),
-
-    // BooksModule,
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_URL,
+        port: Number(process.env.REDIS_PORT),
+      },
+    }),
+    BooksModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
