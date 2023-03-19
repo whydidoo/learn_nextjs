@@ -4,13 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bullmq';
 
 import { BooksModule } from './books/books.module';
-import { dataSourceOptions } from 'db/data-source';
+import { dataSourceOptions } from 'db/postgres';
 import { UsersModule } from './users/users.module';
-import {
-  ClientProxyFactory,
-  ClientsModule,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { env } from 'environment';
 
 @Module({
   imports: [
@@ -24,8 +21,8 @@ import {
     }),
     BullModule.forRoot({
       connection: {
-        host: process.env.REDIS_URL,
-        port: Number(process.env.REDIS_PORT),
+        host: env.REDIS_URL,
+        port: Number(env.REDIS_PORT),
       },
     }),
     ClientsModule.register([
@@ -33,8 +30,8 @@ import {
         name: 'WORKER',
         transport: Transport.REDIS,
         options: {
-          host: process.env.REDIS_URL,
-          port: Number(process.env.REDIS_PORT),
+          host: env.REDIS_URL,
+          port: Number(env.REDIS_PORT),
         },
       },
     ]),

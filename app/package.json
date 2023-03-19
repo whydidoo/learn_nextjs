@@ -17,7 +17,14 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm": "node -r ts-node/register ./node_modules/typeorm/cli.js",
+    "migration:create": "yarn typeorm migration:create ./migrations/Migrations",
+    "migration:generate": "yarn typeorm migration:generate ./migrations/Migrations -d ./db/postgres.ts",
+    "schema:sync": "yarn typeorm schema:sync -d ./db/postgres.ts",
+    "migration:run": "yarn typeorm migration:run -d ./db/postgres.ts",
+    "migration:show": "yarn typeorm migration:show -d ./db/postgres.ts",
+    "migration:down": "yarn typeorm migration:revert"
   },
   "dependencies": {
     "@nestjs/bullmq": "^1.1.0",
@@ -34,14 +41,17 @@
     "bullmq": "^3.10.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "dotenv": "^16.0.3",
     "mongodb": "^4.10.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.12",
-    "uuid": "^9.0.0"
+    "typeorm": "0.3.11",
+    "uuid": "^9.0.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -64,7 +74,7 @@
     "supertest": "^6.1.3",
     "ts-jest": "29.0.3",
     "ts-loader": "^9.2.3",
-    "ts-node": "^10.0.0",
+    "ts-node": "^10.9.1",
     "tsconfig-paths": "4.1.1",
     "typescript": "^4.7.4"
   },

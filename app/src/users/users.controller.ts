@@ -20,6 +20,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @AllowUnauthorizedRequest()
   @UseGuards(LocalAuthGuard)
   @ApiBody({
     type: UserDto,
@@ -28,21 +29,19 @@ export class UsersController {
     status: HttpStatus.OK,
     type: JWT_RESPONSE,
   })
-  @AllowUnauthorizedRequest()
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
   async singIn(@Request() req) {
     return this.usersService.getJwt(req.user);
   }
 
+  @AllowUnauthorizedRequest()
   @ApiResponse({
     status: HttpStatus.CREATED,
     type: User,
   })
-  @AllowUnauthorizedRequest()
   @Post('sign-up')
   async singUp(@Body() userDto: UserDto) {
-    console.log(userDto);
     const user = await this.usersService.findByEmail(userDto.email);
 
     if (user) {

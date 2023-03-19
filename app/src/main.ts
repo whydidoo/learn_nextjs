@@ -3,6 +3,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { env } from 'environment';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -11,7 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'verbose'],
   });
-  const port = process.env.PORT;
+  const port = Number(env.PORT);
 
   const config = new DocumentBuilder()
     .setTitle('Lern API')
@@ -29,8 +30,8 @@ async function bootstrap() {
   await app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.REDIS,
     options: {
-      host: process.env.REDIS_URL,
-      port: Number(process.env.REDIS_PORT),
+      host: env.REDIS_URL,
+      port: Number(env.REDIS_PORT),
     },
   });
 

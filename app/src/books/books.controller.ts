@@ -30,7 +30,6 @@ export class BooksController {
     return this.booksService.getAllBooks();
   }
 
-  @AllowUnauthorizedRequest()
   @ApiResponse({
     status: 201,
     type: Book,

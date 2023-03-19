@@ -1,11 +1,12 @@
+import { env } from 'environment';
 import { join } from 'path';
 import { DataSourceOptions, DataSource } from 'typeorm';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'mongodb',
-  url: process.env.DATABASE_URL,
-  entities: [join(__dirname, '**/*.entity{.ts,.js}')],
-  migrations: [join(__dirname, 'db/migrations/*.{.ts,.js}')],
+  url: env.DATABASE_URL,
+  entities: [join(__dirname, '../src/**/**/*.entity{.ts,.js}')],
+  migrations: [join(__dirname, '../migrations/*{.ts,.js}')],
   useNewUrlParser: true,
   logging: true,
   useUnifiedTopology: true,

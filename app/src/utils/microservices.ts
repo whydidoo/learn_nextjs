@@ -1,4 +1,5 @@
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { env } from 'environment';
 
 export const getWorker = () => ({
   provide: 'WORKER',
@@ -6,8 +7,8 @@ export const getWorker = () => ({
     ClientProxyFactory.create({
       transport: Transport.REDIS,
       options: {
-        host: process.env.REDIS_URL,
-        port: Number(process.env.REDIS_PORT),
+        host: env.REDIS_URL,
+        port: Number(env.REDIS_PORT),
       },
     }),
 });
