@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: 'postgres:14.5'
+    expose:
+      - '5433'
+    ports:
+      - '5433:5433'
+    environment:
+      POSTGRES_USER: 'book'
+      POSTGRES_PASSWORD: 'book'
+      POSTGRES_DB: 'amirsaifutdinov'
+    restart: always
+    networks:
+      - app-network
+    command: -p 5433
+
+  api:
+    container_name: learn-nest-api
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    env_file:
+      - ./.env
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+      - worker
+    ports:
+      - '3000:3000'
+    networks:
+      - app-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: sh -c "(yarn migration:generate && yarn migration:run && npm run start:dev api) || npm run start:dev api" 
+
+  worker:
+    container_name: learn-nest-worker
+    build:
+      context: .
+      dockerfile: ./apps/worker/Dockerfile
+    env_file:
+      - ./.env
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev worker
+
+  redis:
+    container_name: learn-nest-redis
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - '5555:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

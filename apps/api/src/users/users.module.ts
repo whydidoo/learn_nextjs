@@ -9,6 +9,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStratergy } from './strategies/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from './guards/jwt.guard';
+import { env } from 'api/environment';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { JwtGuard } from './guards/jwt.guard';
     JwtModule.registerAsync({
       useFactory: async () => {
         return {
-          secret: process.env.JWT_SECRET,
+          secret: env.JWT_SECRET,
           signOptions: { expiresIn: '2 days' },
         };
       },

@@ -3,15 +3,16 @@ import { ExtractJwt } from 'passport-jwt';
 import { Strategy } from 'passport-local';
 import { Request } from 'express';
 import { UnauthorizedException } from '@nestjs/common';
+import { env } from 'api/environment';
 
 export class JwtStratergy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: env.JWT_SECRET,
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          const data: string = request?.cookies[process.env.JWT_COOKIE_NAME];
+          const data: string = request?.cookies[env.JWT_COOKIE_NAME];
 
           if (!data) {
             return null;

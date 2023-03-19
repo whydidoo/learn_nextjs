@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Book } from './entities/book.entity';
 import { CreateBookDto } from './dto/CreateBookDto';
 
@@ -8,7 +8,7 @@ import { CreateBookDto } from './dto/CreateBookDto';
 export class BooksService {
   constructor(
     @InjectRepository(Book)
-    private readonly booksRepository: MongoRepository<Book>,
+    private readonly booksRepository: Repository<Book>,
   ) {}
 
   async getAllBooks(): Promise<Book[]> {
